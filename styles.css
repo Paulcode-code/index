@@ -89,6 +89,35 @@ h1 {
   border-color: #111111;
 }
 
+.site-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 16px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.delete-button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  border: 1px solid #b00020;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #b00020;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0 12px;
+}
+
+.delete-button:hover,
+.delete-button:focus-visible {
+  background: #b00020;
+  color: #ffffff;
+}
+
 .site-name {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -188,12 +217,17 @@ h1 {
 }
 
 @media (max-width: 560px) {
-  .topbar,
-  .site-card {
+  .topbar {
     align-items: flex-start;
   }
 
   .site-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .site-link {
+    align-items: flex-start;
     flex-direction: column;
   }
 
