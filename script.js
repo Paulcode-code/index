@@ -1,5 +1,5 @@
 const PASSWORD = "Paula12ans!";
-const STORAGE_KEY = "index-des-sites";
+const sites = [];
 
 const openAddButton = document.querySelector("#openAdd");
 const passwordDialog = document.querySelector("#passwordDialog");
@@ -12,18 +12,6 @@ const siteNameInput = document.querySelector("#siteName");
 const siteUrlInput = document.querySelector("#siteUrl");
 const addError = document.querySelector("#addError");
 const siteList = document.querySelector("#siteList");
-
-function loadSites() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function saveSites(sites) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(sites));
-}
 
 function normalizeUrl(value) {
   const trimmed = value.trim();
@@ -40,7 +28,6 @@ function normalizeUrl(value) {
 }
 
 function renderSites() {
-  const sites = loadSites();
   siteList.replaceChildren();
 
   if (sites.length === 0) {
@@ -109,9 +96,7 @@ addForm.addEventListener("submit", (event) => {
     return;
   }
 
-  const sites = loadSites();
   sites.push({ name, url });
-  saveSites(sites);
   renderSites();
   addDialog.close();
 });
