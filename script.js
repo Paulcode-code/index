@@ -1,6 +1,6 @@
-const PASSWORD = "Paula12ans!";
 const SUPABASE_URL = "https://vhzqpmlqgtuteknuyoem.supabase.co/rest/v1";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoenFwbWxxZ3R1dGVrbnV5b2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MzkwMTQsImV4cCI6MjA5NDQxNTAxNH0.yVH-2m7qxi23bsCUa-DF9gT5F0pxWmZgd3A805WEJPY";
+let currentPassword = "";
 
 const openAddButton = document.querySelector("#openAdd");
 const passwordDialog = document.querySelector("#passwordDialog");
@@ -111,12 +111,7 @@ openAddButton.addEventListener("click", () => {
 passwordForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  if (passwordInput.value !== PASSWORD) {
-    passwordError.textContent = "Mot de passe incorrect.";
-    passwordInput.select();
-    return;
-  }
-
+  currentPassword = passwordInput.value;
   passwordDialog.close();
   addForm.reset();
   addError.textContent = "";
@@ -135,14 +130,19 @@ addForm.addEventListener("submit", async (event) => {
   }
 
   try {
-    await supabaseRequest("/sites", {
+    await supabaseRequest("/rpc/add_site_with_password", {
       method: "POST",
-      body: JSON.stringify({ name, url }),
+      body: JSON.stringify({
+        site_name: name,
+        site_url: url,
+        password_to_check: currentPassword,
+      }),
     });
+    currentPassword = "";
     await loadSites();
     addDialog.close();
   } catch {
-    addError.textContent = "Impossible d'ajouter le site pour le moment.";
+    addError.textContent = "Mot de passe incorrect ou ajout impossible.";
   }
 });
 
