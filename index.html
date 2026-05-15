@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Index des sites</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="topbar">
+        <h1>index des sites</h1>
+        <button class="add-button" id="openAdd" type="button" aria-label="Ajouter un site" title="Ajouter un site">
+          +
+        </button>
+      </header>
+
+      <section class="site-list" id="siteList" aria-live="polite"></section>
+    </main>
+
+    <dialog class="dialog" id="passwordDialog">
+      <form method="dialog" class="dialog-panel" id="passwordForm">
+        <button class="close-button" value="cancel" aria-label="Fermer" title="Fermer">x</button>
+        <h2>Mot de passe</h2>
+        <label>
+          <span>Mot de passe</span>
+          <input id="passwordInput" type="password" autocomplete="current-password" required>
+        </label>
+        <p class="error" id="passwordError" role="alert"></p>
+        <button class="primary-button" type="submit">OK</button>
+      </form>
+    </dialog>
+
+    <dialog class="dialog" id="addDialog">
+      <form method="dialog" class="dialog-panel" id="addForm">
+        <button class="close-button" value="cancel" aria-label="Fermer" title="Fermer">x</button>
+        <h2>Ajouter un site</h2>
+        <label>
+          <span>Nom</span>
+          <input id="siteName" type="text" placeholder="test" autocomplete="off" required>
+        </label>
+        <label>
+          <span>Adresse</span>
+          <input id="siteUrl" type="text" placeholder="google.com" autocomplete="off" required>
+        </label>
+        <p class="error" id="addError" role="alert"></p>
+        <button class="primary-button" type="submit">OK</button>
+      </form>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
