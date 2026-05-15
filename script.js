@@ -1,5 +1,6 @@
 const PASSWORD = "Paula12ans!";
-const sites = [];
+const SUPABASE_URL = "https://vhzqpmlqgtuteknuyoem.supabase.co/rest/v1";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZoenFwbWxxZ3R1dGVrbnV5b2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MzkwMTQsImV4cCI6MjA5NDQxNTAxNH0.yVH-2m7qxi23bsCUa-DF9gT5F0pxWmZgd3A805WEJPY";
 
 const openAddButton = document.querySelector("#openAdd");
 const passwordDialog = document.querySelector("#passwordDialog");
@@ -12,6 +13,25 @@ const siteNameInput = document.querySelector("#siteName");
 const siteUrlInput = document.querySelector("#siteUrl");
 const addError = document.querySelector("#addError");
 const siteList = document.querySelector("#siteList");
+
+async function supabaseRequest(path, options = {}) {
+  const response = await fetch(`${SUPABASE_URL}${path}`, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Supabase request failed");
+  }
+
+  return response.json();
+}
 
 function normalizeUrl(value) {
   const trimmed = value.trim();
@@ -27,7 +47,7 @@ function normalizeUrl(value) {
   return `https://${trimmed}`;
 }
 
-function renderSites() {
+function renderSites(sites) {
   siteList.replaceChildren();
 
   if (sites.length === 0) {
@@ -59,6 +79,24 @@ function renderSites() {
   }
 }
 
+function renderMessage(message) {
+  const text = document.createElement("p");
+  text.className = "empty-state";
+  text.textContent = message;
+  siteList.replaceChildren(text);
+}
+
+async function loadSites() {
+  renderMessage("Chargement des sites...");
+
+  try {
+    const sites = await supabaseRequest("/sites?select=name,url&order=created_at.asc");
+    renderSites(sites);
+  } catch {
+    renderMessage("Impossible de charger les sites pour le moment.");
+  }
+}
+
 function openDialog(dialog, focusTarget) {
   dialog.showModal();
   requestAnimationFrame(() => focusTarget.focus());
@@ -85,7 +123,7 @@ passwordForm.addEventListener("submit", (event) => {
   openDialog(addDialog, siteNameInput);
 });
 
-addForm.addEventListener("submit", (event) => {
+addForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const name = siteNameInput.value.trim();
@@ -96,9 +134,16 @@ addForm.addEventListener("submit", (event) => {
     return;
   }
 
-  sites.push({ name, url });
-  renderSites();
-  addDialog.close();
+  try {
+    await supabaseRequest("/sites", {
+      method: "POST",
+      body: JSON.stringify({ name, url }),
+    });
+    await loadSites();
+    addDialog.close();
+  } catch {
+    addError.textContent = "Impossible d'ajouter le site pour le moment.";
+  }
 });
 
-renderSites();
+loadSites();
