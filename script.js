@@ -14,6 +14,7 @@ const siteNameInput = document.querySelector("#siteName");
 const siteUrlInput = document.querySelector("#siteUrl");
 const addError = document.querySelector("#addError");
 const siteList = document.querySelector("#siteList");
+const closeButtons = document.querySelectorAll("[data-close-dialog]");
 
 async function supabaseRequest(path, options = {}) {
   const response = await fetch(`${SUPABASE_URL}${path}`, {
@@ -82,7 +83,9 @@ function renderSites(sites) {
 
     deleteButton.className = "delete-button";
     deleteButton.type = "button";
-    deleteButton.textContent = "Supprimer";
+    deleteButton.textContent = "x";
+    deleteButton.setAttribute("aria-label", `Supprimer ${site.name}`);
+    deleteButton.title = "Supprimer";
     deleteButton.addEventListener("click", () => {
       pendingAction = { type: "delete", site };
       passwordForm.reset();
@@ -123,6 +126,14 @@ openAddButton.addEventListener("click", () => {
   passwordForm.reset();
   passwordError.textContent = "";
   openDialog(passwordDialog, passwordInput);
+});
+
+closeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    currentPassword = "";
+    pendingAction = null;
+    button.closest("dialog").close();
+  });
 });
 
 passwordForm.addEventListener("submit", async (event) => {
