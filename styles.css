@@ -72,6 +72,7 @@ h1 {
 }
 
 .site-card {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -102,14 +103,24 @@ h1 {
 
 .delete-button {
   flex: 0 0 auto;
-  min-height: 36px;
-  border: 1px solid #b00020;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
   background: #ffffff;
-  color: #b00020;
+  color: #777777;
   cursor: pointer;
+  font-size: 1rem;
   font-weight: 700;
-  padding: 0 12px;
+  line-height: 1;
+  opacity: 0;
+  padding: 0;
+  transition: background 140ms ease, color 140ms ease, opacity 140ms ease;
+}
+
+.site-card:hover .delete-button,
+.site-card:focus-within .delete-button {
+  opacity: 1;
 }
 
 .delete-button:hover,
@@ -222,13 +233,17 @@ h1 {
   }
 
   .site-card {
-    align-items: stretch;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
   }
 
   .site-link {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .delete-button {
+    opacity: 1;
   }
 
   .site-url {
