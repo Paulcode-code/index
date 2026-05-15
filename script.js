@@ -32,7 +32,13 @@ async function supabaseRequest(path, options = {}) {
     throw new Error("Supabase request failed");
   }
 
-  return response.json();
+  const text = await response.text();
+
+  if (!text) {
+    return null;
+  }
+
+  return JSON.parse(text);
 }
 
 function normalizeUrl(value) {
